@@ -1,0 +1,47 @@
+{
+  "coord": {
+    "lon": 37.6559,
+    "lat": 0.0463
+  },
+  "weather": [
+    {
+      "id": 501,
+      "main": "Rain",
+      "description": "moderate rain",
+      "icon": "10d"
+    }
+  ],
+  "base": "stations",
+  "main": {
+    "temp": 21.6,
+    "feels_like": 21.62,
+    "temp_min": 21.6,
+    "temp_max": 21.6,
+    "pressure": 1013,
+    "humidity": 69,
+    "sea_level": 1013,
+    "grnd_level": 846
+  },
+  "visibility": 10000,
+  "wind": {
+    "speed": 1.08,
+    "deg": 44,
+    "gust": 1.5
+  },
+  "rain": {
+    "1h": 2
+  },
+  "clouds": {
+    "all": 100
+  },
+  "dt": 1794488781,
+  "sys": {
+    "country": "KE",
+    "sunrise": 1794453008,
+    "sunset": 1794496619
+  },
+  "timezone": 10800,
+  "id": 186827,
+  "name": "Meru",
+  "cod": 200
+}

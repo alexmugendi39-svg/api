@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>my api</title>
+    <style>
+        body{ font-family:Arial; max-width:600px; margin:40px auto; padding:20px; background:#f9f9f9; }
+        h1{ text-align:center; }
+        input{ padding:12px; width:65%; border:2px solid #ddd; border-radius:8px; font-size:16px; }
+        button{ background:blue; color:white; padding:12px 20px; border:none; border-radius:8px; cursor:pointer; font-size:16px; }
+        button:hover{ background:darkblue; }
+        #result{ background:white; padding:25px; margin-top:20px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
+        #result img{ border-radius:8px; }
+    </style>
+</head>
+<body>
+    <h1>country info</h1>
+    <input type="text" id="countryInput" placeholder="Enter a country name">
+    <button>Search</button>
+    <div id="result">Enter a country name above</div>
+
+    <script>
+        const input = document.getElementById("countryInput");
+        const resultDiv = document.getElementById("result");
+        const button = document.querySelector("button");
+
+        button.addEventListener("click", function() {
+            const country = input.value;
+
+            if (country.trim() === "") {
+                resultDiv.textContent = "Please type a country first!";
+                return;
+            }
+
+            resultDiv.textContent = "Loading...";
+
+            Promise.all([
+                fetch("https://raw.githubusercontent.com/samayo/country-json/master/src/country-by-capital-city.json").then(function(r){ return r.json(); }),
+                fetch("https://raw.githubusercontent.com/samayo/country-json/master/src/country-by-population.json").then(function(r){ return r.json(); }),
+                fetch("https://raw.githubusercontent.com/samayo/country-json/master/src/country-by-abbreviation.json").then(function(r){ return r.json(); })
+            ])
+            .then(function(allData) {
+                const capitals = allData[0];
+                const populations = allData[1];
+                const codes = allData[2];
+
+                const foundCapital = capitals.find(function(item) {
+                    return item.country.toLowerCase() === country.toLowerCase();
+                });
+                const foundPop = populations.find(function(item) {
+                    return item.country.toLowerCase() === country.toLowerCase();
+                });
+                const foundCode = codes.find(function(item) {
+                    return item.country.toLowerCase() === country.toLowerCase();
+                });
+
+                if (foundCapital) {
+                    const code = foundCode ? foundCode.abbreviation.toLowerCase() : "";
+                    const flagUrl = "https://flagcdn.com/w320/" + code + ".png";
+                    const popNumber = foundPop ? Number(foundPop.population).toLocaleString() : "Unknown";
+
+                    resultDiv.innerHTML = 
+                        "<h2>" + foundCapital.country + "</h2>" +
+                        "<img src='" + flagUrl + "' width='120'>" +
+                        "<p><b>Capital:</b> " + foundCapital.city + "</p>" +
+                        "<p><b>Population:</b> " + popNumber + "</p>";
+                } else {
+                    resultDiv.textContent = "Country not found. Try Kenya, Uganda, Japan...";
+                }
+            })
+            .catch(function() {
+                resultDiv.textContent = "Error! Check your internet.";
+            });
+        });
+
+        input.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                button.click();
+            }
+        });
+    </script>
+</body>
+</html>
